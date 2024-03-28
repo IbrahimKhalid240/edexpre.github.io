@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Button</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.0.20/sweetalert2.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .power-button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      position: absolute;
+    }
+
+    .power-button i {
+      font-size: 40px;
+      color: #333;
+    }
+
+    .power-button i:hover {
+      color: #FF5733;
+    }
+
+    /* Customizing SweetAlert text font family */
+    .swal2-popup .swal2-title,
+    .swal2-popup .swal2-content {
+      font-family: Arial, sans-serif; /* Change the font family here */
+    }
+
+    /* Style for the "Are you sure?" text font family */
+    .swal2-popup .swal2-title {
+      font-family: Arial, sans-serif; /* Change the font family here */
+    }
+
+    /* Custom buttons styling */
+    .swal2-confirm {
+      background-color: #28a745;
+      border-color: #28a745;
+      color: #fff;
+      padding: 10px 20px;
+      margin: 5px;
+    }
+
+    .swal2-cancel {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: #fff;
+      padding: 10px 20px;
+      margin: 5px;
+    }
+
+    .swal2-confirm:hover, .swal2-cancel:hover {
+      filter: brightness(90%);
+    }
+  </style>
+</head>
+<body>
+  <button id="power-button" class="power-button">
+    <i class="fas fa-power-off"></i><h1>Server Main Unit</h1>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.getElementById("power-button").addEventListener("click", function() {
+      // Hide the power button when the dialog is shown
+      document.getElementById("power-button").style.display = "none";
+      
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "swal2-confirm",
+          cancelButton: "swal2-cancel"
+        },
+        buttonsStyling: false
+      });
+
+      swalWithBootstrapButtons.fire({
+        title: "Are you sure to turn on the server?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "YES!",
+        cancelButtonText: "NO!",
+        reverseButtons: true // Swap the positions of the confirm and cancel buttons
+      }).then((result) => {
+        if (result.isConfirmed) {
+          swalWithBootstrapButtons.fire({
+            title: "Success!",
+            text: "Your server has been turned on!.",
+            icon: "success"
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          document.getElementById("power-button").style.display = "block";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

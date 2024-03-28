@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDEXPRE | LOGIN</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+    header .header {
+        background-color: #fff;
+        height: 45px;
+    }
+
+    header a img {
+        width: 134px;
+        margin-top: 4px;
+    }
+
+    .login-page {
+        width: 360px;
+        padding: 8% 0 0;
+        margin: auto;
+    }
+
+    .login-page .form .login {
+        margin-top: -31px;
+        margin-bottom: 26px;
+    }
+
+    .form {
+        position: relative;
+        z-index: 1;
+        background: #FFFFFF;
+        max-width: 360px;
+        margin-top: -50px;
+        padding: 45px;
+        text-align: center;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        height: 450px; /* Initial height */
+        overflow: hidden; /* Hide overflow content */
+        transition: height 0.5s; /* Add transition for smooth height adjustment */
+    }
+
+    .form input {
+        font-family: "Roboto", sans-serif;
+        outline: 0;
+        background: #f2f2f2;
+        width: 100%;
+        border: 0;
+        margin: 0 0 15px;
+        padding: 15px;
+        box-sizing: border-box;
+        font-size: 14px;
+        padding-left: 40px; /* Add padding for the icon */
+    }
+
+    .form input[type="email"] {
+        background-repeat: no-repeat;
+        background-position: 10px center;
+    }
+
+    .form input[type="password"] {
+        background-repeat: no-repeat;
+        background-position: 10px center;
+    }
+
+    .form button {
+        font-family: "Roboto", sans-serif;
+        text-transform: uppercase;
+        outline: 0;
+        background-color: red;
+        background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA 51%, #1FA2FF 100%);
+        width: 100%;
+        border: 0;
+        padding: 15px;
+        color: #FFFFFF;
+        font-size: 14px;
+        -webkit-transition: all 0.3 ease;
+        transition: all 0.3 ease;
+        cursor: pointer;
+    }
+
+    .form button:hover {
+        background-position: right center; /* change the direction of the change here */
+        color: #fff;
+    }
+
+    .form .message {
+        margin-top: 20px;
+        margin-left: -150px;
+        color: #b3b3b3;
+        font-size: 12px;
+        position: relative; /* Added position relative */
+    }
+
+    .form .message a {
+        color: #4CAF50;
+        text-decoration: none;
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    body {
+    background: linear-gradient(to right, 
+        #FF4F58, #F9CDAD, #FFD700, #9FE2BF, #008000, #568203, #48D1CC, #ADD8E6, #0000FF, #000080, #66023C, #2F4F4F, #A52A2A, #8B4513, #FFF5EE);
+    background-size: 1600% 100%;
+    animation: colorChange 10s linear infinite; /* Use the correct animation name */
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes colorChange {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+
+
+    /* Style for the show password button */
+    .show-password-btn {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+    .forgot {
+    text-decoration: none;
+    color: red;
+    font-size: 12px;
+    position: absolute;
+    bottom: 20px; /* Adjust as needed */
+    left: 50px; /* Adjust as needed */
+}
+
+
+
+
+    .forgot a {
+        color: red;
+        text-decoration: none;
+    }
+
+    .forgot a:hover {
+        text-decoration: underline;
+    }
+
+    .authenticating {
+        color: #000;
+        font-size: 15px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        margin-top: 58px;
+        margin-left: 115px;
+        display: none;
+        white-space: nowrap; /* Prevent line breaks */
+    }
+
+    /* Style for the loader */
+    .loader {
+        display: none;
+        margin-left: 5px; /* Adjust the margin as needed */
+        width: 50px; /* Adjust the width as needed */
+        height: 50px; /* Adjust the height as needed */
+        vertical-align: middle; /* Align the loader vertically */
+        margin-top: -30px;
+        margin-left: 240px;
+    }
+
+    #caps-lock-alert {
+        display: none;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background-color: #ffcc00;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #aaa;
+        animation: fadeAlert 0.5s forwards;
+    }
+
+    @keyframes fadeAlert {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* Animation for sliding up */
+    @keyframes slideDown {
+    0% { height: 400px; } /* Initial height */
+    100% { height: 517px; } /* Adjusted height */
+}
+
+/* CSS for sliding up animation */
+@keyframes slideUp {
+    0% { height: 500px; } /* Adjusted height */
+    100% { height: 450px; } /* Initial height */
+}
+
+.secured-text {
+    background-color: #0bded3; /* Change the background color to your desired color */
+    color: #000; /* Change the text color to white or any color that suits your design */
+    text-align: center;
+    padding: 10px 0; /* Adjust padding as needed */
+    font-weight: bold;
+    margin-bottom: 20px; /* Adjust margin as needed */
+    position: relative; /* Position the text relative to the form */
+    top: -50px; /* Position above the form */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-image: url('path/to/your/image.jpg'); /* Add the path to your background image */
+    background-size: cover; /* Adjust the background size as needed */
+}
+
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #888; /* Adjust color as needed */
+    margin-top: 20px; /* Adjust margin as needed */
+}
+
+
+
+</style>
+
+<body>
+    <audio id="successSound">
+        <source src="success.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="errorSound">
+        <source src="error.mp3" type="audio/mpeg">
+    </audio>
+    <div class="login-page">
+        <div class="form">
+            <div id="caps-lock-alert">Caps Lock is on!</div>
+            <div class="secured-text">Secured</div> <!-- Add the secured text here -->
+            <div class="login">
+                <div class="login-header">
+                    <h3>E D E X P R E &#x2705;</h3>
+                    <p>Please enter your credentials for <br /> <b> Log in</b></p>
+                </div>
+            </div>
+            <form class="login-form" id="loginForm" style="position: relative;">
+                <div style="position:relative;">
+                    <input type="email" placeholder="E-mail" id="loginEmail" required />
+                    <i class="fas fa-envelope"
+                        style="position:absolute; margin-left: -260px;margin-top: 23px; transform:translateY(-50%);"></i>
+                </div>
+                <div style="position:relative;">
+                    <input type="password" placeholder="Password" id="loginPassword" required autocomplete="off"
+                        readonly onfocus="this.removeAttribute('readonly');">
+
+                    <i class="fas fa-lock"
+                        style="position:absolute; margin-left: -260px;margin-top: 23px; transform:translateY(-50%);"></i>
+                    <!-- Show password button -->
+                    <i class="fas fa-eye show-password-btn" style="margin-top: -6px;"
+                        onclick="togglePasswordVisibility('loginPassword')"></i>
+                </div>
+                <button type="button" onclick="attemptLogin()">Log In</button><br>
+                <p>Or login with:</p>
+                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                    <img src="microsoft.png" alt="Microsoft" style="width: 35px; margin-left: 80px;">
+                    <img src="google.jpeg" alt="Google" style="width: 35px; margin-right: 80px;">
+                </div>
+                <p class="message">Not registered? <a href="gol.html">Create an account</a> </p>
+                <a href="forgotpass.html" class="forgot">Forgot Email | Forgot Password</a>
+                <div class="authenticating" id="authenticating" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"> Authenticating... &nbsp</div>
+                
+                  <img src="Pulse-1s-263px (1).gif" alt="Loader" class="loader">
+                <br>
+                <div class="footer">
+                    Copyright EDEXPRE 2020-2025
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        async function sha256(input) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        let loginAttempts = 0;
+
+        async function attemptLogin() {
+            loginAttempts++;
+            if (loginAttempts === 4) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Too many login attempts',
+                    text: 'Please try again later or reset your email or password.',
+                });
+                return;
+            }
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const authenticatingMessage = document.getElementById('authenticating');
+            const loader = document.querySelector('.loader');
+
+            if (!email && !password) {
+                showErrorMessage('Please fill in all fields.');
+                return;
+            }
+
+            if (!email && password) {
+                showErrorMessage('Please enter your email.');
+                return;
+            }
+
+            if (email && !password) {
+                showErrorMessage('Please enter your password.');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showErrorMessage('Invalid email format. Please enter a valid email address "@".');
+                return;
+            }
+
+            // Show "Authenticating..." text and loader
+            authenticatingMessage.style.display = 'block';
+            loader.style.display = 'block';
+
+            // Slide down the form with animation
+            document.querySelector('.form').style.animation = 'slideDown 0.5s forwards';
+
+            // Add a delay of 1 second before attempting to log in
+            setTimeout(async () => {
+                // Retrieve hashed password from localStorage
+                const storedAccountString = localStorage.getItem(email);
+
+                if (!storedAccountString) {
+                    showErrorMessage('Account not found. Please check your email or sign up.');
+                    // Hide "Authenticating..." text and loader
+                    authenticatingMessage.style.display = 'none';
+                    loader.style.display = 'none';
+                    return;
+                }
+
+                const storedAccount = JSON.parse(storedAccountString);
+                const storedHashedPassword = storedAccount.password;
+                const storedUsername = storedAccount.username;
+
+                // Verify entered password with stored hashed password
+                const enteredHashedPassword = await sha256(password);
+
+                if (enteredHashedPassword === storedHashedPassword) {
+                    showSuccessMessage('Welcome ' + storedUsername + '!');
+                    // Redirect to the next page
+                    // window.location.href = 'nextpage.html';
+                } else {
+                    showError('Incorrect password. Please try again.');
+                }
+
+                // Hide "Authenticating..." text and loader
+                authenticatingMessage.style.display = 'none';
+                loader.style.display = 'none';
+
+                // Slide up the form after hiding the message
+                document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
+            }, 3000);
+        }
+
+        function showSuccessMessage(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful',
+                text: message,
+                showConfirmButton: false,
+                timer: 2000,
+            });
+            // Play success sound
+            document.getElementById('successSound').play();
+            setTimeout(function () {
+                // Redirect to the next page
+                window.location.href = 'index1.html';
+            }, 2000);
+        }
+
+        function showError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message,
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            // Play error sound
+            document.getElementById('errorSound').play();
+            // Slide up the form after hiding the message
+            document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
+        }
+
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.querySelector('.show-password-btn');
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const capsAlert = document.getElementById('caps-lock-alert');
+            const emailField = document.getElementById('loginEmail');
+            const passwordField = document.getElementById('loginPassword');
+            let isCapsOn = false;
+
+            function checkCapsLock(event) {
+                const capsLockOn = event.getModifierState && event.getModifierState('CapsLock');
+                if (capsLockOn && !isCapsOn) {
+                    isCapsOn = true;
+                    capsAlert.style.display = 'block';
+                } else if (!capsLockOn && isCapsOn) {
+                    isCapsOn = false;
+                    capsAlert.style.display = 'none';
+                }
+            }
+
+            emailField.addEventListener('keypress', checkCapsLock);
+            emailField.addEventListener('keyup', checkCapsLock);
+            passwordField.addEventListener('keypress', checkCapsLock);
+            passwordField.addEventListener('keyup', checkCapsLock);
+        });
+        
+
+        function slideDownForm() {
+        const form = document.querySelector('.form');
+        form.style.animation = 'slideDown 0.5s forwards'; // Start slide down animation
+    }
+
+    // Function to slide up the form
+    function slideUpForm() {
+        const form = document.querySelector('.form');
+        form.style.animation = 'slideUp 0.5s forwards'; // Start slide up animation
+    }
+
+    // Call slideDownForm function when login button is pressed
+    document.getElementById('loginButton').addEventListener('click', slideDownForm);
+
+    // Call slideUpForm function when the alert is hidden
+    document.addEventListener('DOMContentLoaded', function () {
+        const alertContainer = document.querySelector('.swal2-container');
+        alertContainer.addEventListener('animationend', function (event) {
+            if (event.animationName === 'fadeOut') { // Change the animation name to match the one used for hiding the alert
+                slideUpForm();
+            }
+        });
+    });
+
+    </script>
+</body>
+
+</html>
