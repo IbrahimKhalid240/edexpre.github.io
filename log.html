@@ -264,7 +264,7 @@
     <div class="login-page">
         <div class="form">
             <div id="caps-lock-alert">Caps Lock is on!</div>
-            <div class="secured-text">Secured</div> <!-- Add the secured text here -->
+            <div class="secured-text">Secured</div>
             <div class="login">
                 <div class="login-header">
                     <h3>E D E X P R E &#x2705;</h3>
@@ -273,12 +273,12 @@
             </div>
             <form class="login-form" id="loginForm" style="position: relative;">
                 <div style="position:relative;">
-                    <input type="email" placeholder="E-mail" id="loginEmail" required />
+                    <input type="email" class="form-control" placeholder="E-mail" id="loginEmail" required />
                     <i class="fas fa-envelope"
                         style="position:absolute; margin-left: -260px;margin-top: 23px; transform:translateY(-50%);"></i>
                 </div>
                 <div style="position:relative;">
-                    <input type="password" placeholder="Password" id="loginPassword" required autocomplete="off"
+                    <input type="password" class="form-control" placeholder="Password" id="loginPassword" required autocomplete="off"
                         readonly onfocus="this.removeAttribute('readonly');">
 
                     <i class="fas fa-lock"
@@ -287,7 +287,7 @@
                     <i class="fas fa-eye show-password-btn" style="margin-top: -6px;"
                         onclick="togglePasswordVisibility('loginPassword')"></i>
                 </div>
-                <button type="button" onclick="attemptLogin()">Log In</button><br>
+                <button type="button" class="btn btn-primary" onclick="attemptLogin()">Log In &nbsp; <i class="fa-solid fa-right-to-bracket"></i></button><br>
                 <p>Or login with:</p>
                 <div style="display: flex; justify-content: space-between; margin-top: 10px;">
                     <img src="microsoft.png" alt="Microsoft" style="width: 35px; margin-left: 80px;" class="hover1">
@@ -306,166 +306,170 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Your custom script -->
+    <!-- Your custom script --> 
     <script>
         async function sha256(input) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(input);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function attemptLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const authenticatingMessage = document.getElementById('authenticating');
+    const loader = document.querySelector('.loader');
+
+    if (!email && !password) {
+        showErrorMessage('Both fields are missing');
+        return;
+    }
+
+    if (!email) {
+        showErrorMessage('Please enter your email');
+        return;
+    }
+
+    if (!password) {
+        showErrorMessage('Please enter your password');
+        return;
+    }
+
+    if (!email.includes('@')) {
+        showErrorMessage('Invalid email format. Please enter a valid email address.');
+        return;
+    }
+
+    // Show "Authenticating..." text and loader
+    authenticatingMessage.style.display = 'block';
+    loader.style.display = 'block';
+
+    // Slide down the form with animation
+    document.querySelector('.form').style.animation = 'slideDown 0.5s forwards';
+
+    // Add a delay of 1 second before attempting to log in
+    setTimeout(async () => {
+        // Retrieve hashed password from localStorage
+        const storedAccountString = localStorage.getItem(email);
+
+        if (!storedAccountString) {
+            showErrorMessage('Account not found. Please check your email or sign up.');
+            // Hide "Authenticating..." text and loader
+            authenticatingMessage.style.display = 'none';
+            loader.style.display = 'none';
+            return;
         }
 
-        async function attemptLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const authenticatingMessage = document.getElementById('authenticating');
-            const loader = document.querySelector('.loader');
+        const storedAccount = JSON.parse(storedAccountString);
+        const storedHashedPassword = storedAccount.password;
+        const storedUsername = storedAccount.username;
 
-            if (!email && !password) {
-                showErrorMessage('Both fields are missing');
-                return;
-            }
+        // Verify entered password with stored hashed password
+        const enteredHashedPassword = await sha256(password);
 
-            if (!email) {
-                showErrorMessage('Please enter your email');
-                return;
-            }
-
-            if (!password) {
-                showErrorMessage('Please enter your password');
-                return;
-            }
-
-            if (!email.includes('@')) {
-                showErrorMessage('Invalid email format. Please enter a valid email address.');
-                return;
-            }
-
-            // Show "Authenticating..." text and loader
-            authenticatingMessage.style.display = 'block';
-            loader.style.display = 'block';
-
-            // Slide down the form with animation
-            document.querySelector('.form').style.animation = 'slideDown 0.5s forwards';
-
-            // Add a delay of 1 second before attempting to log in
-            setTimeout(async () => {
-                // Retrieve hashed password from localStorage
-                const storedAccountString = localStorage.getItem(email);
-
-                if (!storedAccountString) {
-                    showErrorMessage('Account not found. Please check your email or sign up.');
-                    // Hide "Authenticating..." text and loader
-                    authenticatingMessage.style.display = 'none';
-                    loader.style.display = 'none';
-                    return;
-                }
-
-                const storedAccount = JSON.parse(storedAccountString);
-                const storedHashedPassword = storedAccount.password;
-                const storedUsername = storedAccount.username;
-
-                // Verify entered password with stored hashed password
-                const enteredHashedPassword = await sha256(password);
-
-                if (enteredHashedPassword === storedHashedPassword) {
-                    showSuccessMessage('Welcome ' + storedUsername + '!');
-                    // Redirect to the next page
-                    // window.location.href = 'nextpage.html';
-                } else {
-                    showError('Incorrect password. Please try again.');
-                }
-
-                // Hide "Authenticating..." text and loader
-                authenticatingMessage.style.display = 'none';
-                loader.style.display = 'none';
-
-                // Slide up the form after hiding the message
-                document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
-            }, 3000);
+        if (enteredHashedPassword === storedHashedPassword) {
+            showSuccessMessage('Welcome ' + storedUsername + '!');
+            // Redirect to the next page
+            // window.location.href = 'nextpage.html';
+        } else {
+            showError('Incorrect password. Please try again.');
         }
 
-        function showSuccessMessage(message) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Successful',
-                text: message,
-                showConfirmButton: false,
-                timer: 2000,
-            });
-            // Play success sound
-            document.getElementById('successSound').play();
-            setTimeout(function () {
-                // Redirect to the next page
-                window.location.href = 'index1.html';
-            }, 2000);
+        // Hide "Authenticating..." text and loader
+        authenticatingMessage.style.display = 'none';
+        loader.style.display = 'none';
+
+        // Slide up the form after hiding the message
+        document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
+    }, 3000);
+}
+
+function showSuccessMessage(message) {
+    Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: message,
+        showConfirmButton: false,
+        timer: 2000,
+    });
+    // Play success sound
+    document.getElementById('successSound').play();
+    setTimeout(function () {
+        // Redirect to the next page
+        window.location.href = 'index1.html';
+    }, 2000);
+}
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        showConfirmButton: false,
+        timer: 1500,
+    });
+    // Play error sound
+    document.getElementById('errorSound').play();
+    // Slide up the form after hiding the message
+    document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
+}
+
+function showErrorMessage(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message,
+        showConfirmButton: false,
+        timer: 1500,
+    });
+    // Play error sound
+    document.getElementById('errorSound').play();
+    // Slide up the form after hiding the message
+    document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
+}
+
+function togglePasswordVisibility(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const eyeIcon = document.querySelector('.show-password-btn');
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = "password";
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const capsAlert = document.getElementById('caps-lock-alert');
+    const emailField = document.getElementById('loginEmail');
+    const passwordField = document.getElementById('loginPassword');
+    let isCapsOn = false;
+
+    function checkCapsLock(event) {
+        const capsLockOn = event.getModifierState && event.getModifierState('CapsLock');
+        if (capsLockOn && !isCapsOn) {
+            isCapsOn = true;
+            capsAlert.style.display = 'block';
+        } else if (!capsLockOn && isCapsOn) {
+            isCapsOn = false;
+            capsAlert.style.display = 'none';
         }
+    }
 
-        function showError(message) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: message,
-                showConfirmButton: false,
-                timer: 1500,
-            });
-            // Play error sound
-            document.getElementById('errorSound').play();
-            // Slide up the form after hiding the message
-            document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
-        }
+    emailField.addEventListener('keypress', checkCapsLock);
+    emailField.addEventListener('keyup', checkCapsLock);
+    passwordField.addEventListener('keypress', checkCapsLock);
+    passwordField.addEventListener('keyup', checkCapsLock);
+});
 
-        function showErrorMessage(message) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: message,
-                showConfirmButton: false,
-                timer: 1500,
-            });
-            // Play error sound
-            document.getElementById('errorSound').play();
-            // Slide up the form after hiding the message
-            document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
-        }
-
-        function togglePasswordVisibility(inputId) {
-            const passwordInput = document.getElementById(inputId);
-            const eyeIcon = document.querySelector('.show-password-btn');
-
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = "password";
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const capsAlert = document.getElementById('caps-lock-alert');
-            const emailField = document.getElementById('loginEmail');
-            const passwordField = document.getElementById('loginPassword');
-            let isCapsOn = false;
-
-            function checkCapsLock(event) {
-                const capsLockOn = event.getModifierState && event.getModifierState('CapsLock');
-                if (capsLockOn && !isCapsOn) {
-                    isCapsOn = true;
-                    capsAlert.style.display = 'block';
-                } else if (!capsLockOn && isCapsOn) {
-                    isCapsOn = false;
-                    capsAlert.style.display = 'none';
-                }
-            }
-
-            emailField.addEventListener('keypress', checkCapsLock);
-            emailField.addEventListener('keyup', checkCapsLock);
-            passwordField.addEventListener('keypress', checkCapsLock);
-            passwordField.addEventListener('keyup', checkCapsLock);
-        });
 
     </script>
 </body>
