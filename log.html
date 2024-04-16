@@ -241,6 +241,15 @@
     margin-top: 20px; /* Adjust margin as needed */
 }
 
+.hover1:hover{
+    opacity: 0.7;
+    
+}
+
+.hover2:hover{
+    opacity: 0.7;
+    
+}
 
 
 </style>
@@ -281,8 +290,8 @@
                 <button type="button" onclick="attemptLogin()">Log In</button><br>
                 <p>Or login with:</p>
                 <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                    <img src="microsoft.png" alt="Microsoft" style="width: 35px; margin-left: 80px;">
-                    <img src="google.jpeg" alt="Google" style="width: 35px; margin-right: 80px;">
+                    <img src="microsoft.png" alt="Microsoft" style="width: 35px; margin-left: 80px;" class="hover1">
+                    <img src="google.jpeg" alt="Google" style="width: 35px; margin-right: 80px;" class="hover2">
                 </div>
                 <p class="message">Not registered? <a href="gol.html">Create an account</a> </p>
                 <a href="forgotpass.html" class="forgot">Forgot Email | Forgot Password</a>
@@ -306,41 +315,29 @@
             return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
         }
 
-        let loginAttempts = 0;
-
         async function attemptLogin() {
-            loginAttempts++;
-            if (loginAttempts === 4) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Too many login attempts',
-                    text: 'Please try again later or reset your email or password.',
-                });
-                return;
-            }
-
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const authenticatingMessage = document.getElementById('authenticating');
             const loader = document.querySelector('.loader');
 
             if (!email && !password) {
-                showErrorMessage('Please fill in all fields.');
+                showErrorMessage('Both fields are missing');
                 return;
             }
 
-            if (!email && password) {
-                showErrorMessage('Please enter your email.');
+            if (!email) {
+                showErrorMessage('Please enter your email');
                 return;
             }
 
-            if (email && !password) {
-                showErrorMessage('Please enter your password.');
+            if (!password) {
+                showErrorMessage('Please enter your password');
                 return;
             }
 
             if (!email.includes('@')) {
-                showErrorMessage('Invalid email format. Please enter a valid email address "@".');
+                showErrorMessage('Invalid email format. Please enter a valid email address.');
                 return;
             }
 
@@ -418,6 +415,20 @@
             document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
         }
 
+        function showErrorMessage(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message,
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            // Play error sound
+            document.getElementById('errorSound').play();
+            // Slide up the form after hiding the message
+            document.querySelector('.form').style.animation = 'slideUp 0.5s forwards';
+        }
+
         function togglePasswordVisibility(inputId) {
             const passwordInput = document.getElementById(inputId);
             const eyeIcon = document.querySelector('.show-password-btn');
@@ -455,31 +466,6 @@
             passwordField.addEventListener('keypress', checkCapsLock);
             passwordField.addEventListener('keyup', checkCapsLock);
         });
-        
-
-        function slideDownForm() {
-        const form = document.querySelector('.form');
-        form.style.animation = 'slideDown 0.5s forwards'; // Start slide down animation
-    }
-
-    // Function to slide up the form
-    function slideUpForm() {
-        const form = document.querySelector('.form');
-        form.style.animation = 'slideUp 0.5s forwards'; // Start slide up animation
-    }
-
-    // Call slideDownForm function when login button is pressed
-    document.getElementById('loginButton').addEventListener('click', slideDownForm);
-
-    // Call slideUpForm function when the alert is hidden
-    document.addEventListener('DOMContentLoaded', function () {
-        const alertContainer = document.querySelector('.swal2-container');
-        alertContainer.addEventListener('animationend', function (event) {
-            if (event.animationName === 'fadeOut') { // Change the animation name to match the one used for hiding the alert
-                slideUpForm();
-            }
-        });
-    });
 
     </script>
 </body>
