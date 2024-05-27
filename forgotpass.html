@@ -16,7 +16,7 @@
         @import url(https://fonts.googleapis.com/css?family=Roboto:300);
         /* Your styling for the forgot password page goes here */
         body {
-            background-color: #6cc400;
+            background-color: #fff;
             font-family: "Roboto", sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -30,10 +30,14 @@
     margin: 50px auto 0; /* Decreased top margin */
     padding: 60px;
     text-align: center;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24), 0 5px 5px 0 rgba(0, 0, 0, 0.24), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-    /* Adjust the height here */
-    height: 450px;
-}
+    border-radius: 86px;
+    background: #e0e0e0;
+    border-radius: 87px;
+border-radius: 87px;
+border-radius: 66px;
+background: #e0e0e0;
+box-shadow:  34px 34px 100px #9d9d9d,
+             -34px -34px 100px #ffffff;}
 
 
         .form input {
@@ -54,8 +58,9 @@
             outline: 0;
             background-color: #328f8a;
             background-image: linear-gradient(45deg, #328f8a, #08ac4b);
-            width: 100%;
+            width: 70%;
             border: 0;
+            border-radius: 10px 10px 10px 10px;
             padding: 15px;
             color: #FFFFFF;
             font-size: 14px;
@@ -67,7 +72,7 @@
         .form .message {
             margin: 15px 0 0;
             color: #b3b3b3;
-            font-size: 12px;
+            font-size: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -113,7 +118,6 @@
 
 <body>
     <div class="center-text">
-        <p style="margin-left: 20px;">EDEXPRE</p>
     </div>
 
     <div class="form">
@@ -126,7 +130,7 @@
         </form>
         <br><br><br>
         <!-- Add placeholder text with typing animation -->
-        <p id="typingText" class="typing-animation" style="font-family: Arial, Helvetica, sans-serif;"><b>EDEXPRE</b> is a website that serves its all power to fulfil our clients needs. <b>EDEXPRE</b> is also An authorized and approved vendor by Division of Workers Compensation State of California.</p>
+        <!-- <p id="typingText" class="typing-animation" style="font-family: Arial, Helvetica, sans-serif;"><b>EDEXPRE</b> is a website that serves its all power to fulfil our clients needs. <b>EDEXPRE</b> is also An authorized and approved vendor by Division of Workers Compensation State of California.</p> -->
     </div>
 
     <script>
@@ -183,34 +187,34 @@
     animateTyping();
 };
 
-function animateTyping() {
-    const textElement = document.querySelector('.typing-animation');
-    const text = textElement.textContent;
-    textElement.textContent = ''; // Clear the text initially
+// function animateTyping() {
+//     const textElement = document.querySelector('.typing-animation');
+//     const text = textElement.textContent;
+//     textElement.textContent = ''; // Clear the text initially
 
-    let index = 0;
-    let reverse = false; // Track if the animation should reverse
+//     let index = 0;
+//     let reverse = false; // Track if the animation should reverse
 
-    const intervalId = setInterval(function () {
-        if (!reverse) {
-            // Typing animation
-            if (index < text.length) {
-                textElement.textContent += text[index];
-                index++;
-            } else {
-                reverse = true; // Start reversing animation
-            }
-        } else {
-            // Reversing animation
-            if (index > 0) {
-                index--;
-                textElement.textContent = text.substring(0, index); // Remove characters one by one
-            } else {
-                clearInterval(intervalId); // Stop the interval once text is cleared
-            }
-        }
-    }, 50); // Adjust typing speed here (in milliseconds)
-}
+//     const intervalId = setInterval(function () {
+//         if (!reverse) {
+//             // Typing animation
+//             if (index < text.length) {
+//                 textElement.textContent += text[index];
+//                 index++;
+//             } else {
+//                 reverse = true; // Start reversing animation
+//             }
+//         } else {
+//             // Reversing animation
+//             if (index > 0) {
+//                 index--;
+//                 textElement.textContent = text.substring(0, index); // Remove characters one by one
+//             } else {
+//                 clearInterval(intervalId); // Stop the interval once text is cleared
+//             }
+//         }
+//     }, 50); // Adjust typing speed here (in milliseconds)
+// }
 
 
     </script>
